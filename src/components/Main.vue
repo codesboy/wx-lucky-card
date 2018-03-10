@@ -1,44 +1,53 @@
 <template>
     <div id="app">
-        <h1 v-if="!beginLucky">抽奖尚未开始或者已经结束</h1>
+        <div class="main">
+            <h1 v-if="!beginLucky">抽奖尚未开始或者已经结束</h1>
         <div v-else>
-            <h2>贝臣刮刮乐</h2>
             <!-- {{name}}--{{phone}} -->
             <div class="card">
                 <canvas id="canvas" width="280px" height="100px"></canvas>
                 <div class="lucky">{{lucky}}</div>
             </div>
-            <div class="msg">{{msg}}</div>
+            <div class="msg" v-html="msg"></div>
         </div>
+        </div>
+        
     </div>
 </template>
 
 <script>
+import axios from "axios";
 var draw;
 var preHandler = function(e) {
   e.preventDefault();
 };
 import cardImg from "../assets/card.jpg";
 class Draw {
-  init(id,vue) {
+  init(id, vue) {
     var width = 280;
     var height = 100;
     var myCanvasObject = document.getElementById(id);
     var ctx = myCanvasObject.getContext("2d");
 
-    //绘制黑色矩形
-    // ctx.beginPath();
-    // ctx.fillStyle = "#939393";
-    // ctx.rect(0, 0, width, height);
-    // ctx.closePath();
-    // ctx.fill();
+    // 绘制黑色矩形
+    ctx.beginPath();
+    ctx.fillStyle = "#939393";
+    ctx.rect(2, 2, width - 2, height - 2);
+    ctx.closePath();
+    ctx.fill();
 
-    var img = new Image();
-    img.onload = function() {
-      ctx.drawImage(img, 0, 0);
-    };
-    // img.src = "https://bcwx.rehack.cn/static/lucky/images/card.jpg";
-    img.src = cardImg;
+    ctx.font = "20px sans-serif";
+    ctx.strokeStyle = "#000";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.strokeText("刮一刮，有惊喜", 140, 50);
+
+    // var img = new Image();
+    // img.onload = function() {
+    //   ctx.drawImage(img, 0, 0);
+    // };
+    // // img.src = "https://bcwx.rehack.cn/static/lucky/images/card.jpg";
+    // img.src = cardImg;
 
     var isDown = false; //鼠标是否按下标志
     var pointerArr = []; //鼠标移动坐标数组
@@ -92,29 +101,27 @@ class Draw {
       isDown = false;
       pointerArr = [];
       var data = ctx.getImageData(
-        0,
-        0,
-        myCanvasObject.width,
-        myCanvasObject.height
-      ).data,scrapeNum =0;
-    //   console.log(a);
+          0,
+          0,
+          myCanvasObject.width,
+          myCanvasObject.height
+        ).data,
+        scrapeNum = 0;
+      //   console.log(a);
       for (var i = 3, len = data.length; i < len; i += 4) {
         if (data[i] === 0) {
           scrapeNum++;
         }
       }
-      if (scrapeNum > myCanvasObject.width* myCanvasObject.height * 0.2) {
-          if(vue.lucky!='谢谢惠顾!'){
-
-            vue.msg=`恭喜你中奖:${vue.lucky}`;
-          }else{
-              vue.msg=`很抱歉，您未中奖！`;
-          }
-        
+      if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.2) {
+        if (vue.lucky != "谢谢惠顾!") {
+          vue.msg = `恭喜你中奖了！请及时与我们的工作人员取得联系，电话:<a href='tel:02865006500'>02865006500</a>`;
+        } else {
+          vue.msg = `很抱歉，您未中奖！`;
+        }
       }
-      if(scrapeNum > myCanvasObject.width* myCanvasObject.height * 0.5){
+      if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.5) {
         ctx.clearRect(0, 0, myCanvasObject.width, myCanvasObject.height);
-
       }
     });
 
@@ -148,42 +155,80 @@ export default {
     return {
       beginLucky: true,
       phone: "",
-      msg:'',
-      lucky:null
+      msg: "",
+      lucky: null
     };
   },
   mounted() {
-    draw = new Draw();
-    draw.init("canvas",this);
-    if(window.localStorage.getItem('lucky')){
-        this.lucky=window.localStorage.getItem('lucky');
-    }else{
-        this.lucky='谢谢惠顾!';
+    if (this.beginLucky) {
+      draw = new Draw();
+      draw.init("canvas", this);
+      if (window.localStorage.getItem("lucky")) {
+        this.lucky = window.localStorage.getItem("lucky");
+      } else {
+        this.lucky = "谢谢惠顾!";
+      }
     }
   },
   created() {
     let st = window.localStorage;
+    // st.clear();
+    if (st.getItem("lucky_status") == 2) {
+      this.beginLucky = false;
+    }
     if (st.getItem("phone")) {
       this.phone = st.getItem("phone");
     } else {
       this.$router.push({ path: "/" });
     }
+  },
+  watch: {
+    msg(curVal, oldVal) {
+      if (curVal != oldVal) {
+        console.log(curVal);
+        axios
+          .post("https://bcwx.rehack.cn/api/v1/changeluckystatus", {
+            phone: this.phone
+          })
+          .then(function(response) {
+            console.log(response);
+            window.localStorage.setItem("lucky_status", 2);
+          })
+          .catch(function(response) {
+            console.log(response);
+          });
+      }
+    }
   }
 };
 </script>
 
-<style >
+<style scoped>
 @import "../assets/base.css";
+
+#app {
+  background: url("../assets/bg2.jpg") no-repeat 0 0;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.main {
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 40vh;
+}
 .card {
   position: relative;
   width: 280px;
   height: 100px;
   margin: 20px auto;
-
+  box-sizing: border-box;
+  /* background: #ccc; */
 }
 h2 {
   text-align: center;
-
 }
 .card .lucky {
   width: 100%;
@@ -192,17 +237,17 @@ h2 {
   line-height: 100px;
   z-index: 0;
   font-size: 22px;
-  border:1px solid #ccc;
+  border: 1px solid #ccc;
+  color: #fff;
 }
 
 #canvas {
   /* background: red; */
   position: absolute;
   z-index: 1;
-
 }
-.msg{
-    color: red;
-    text-align: center;
+.msg {
+  color: #fff;
+  text-align: center;
 }
 </style>
