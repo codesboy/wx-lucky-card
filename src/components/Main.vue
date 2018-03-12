@@ -117,14 +117,14 @@ class Draw {
           scrapeNum++;
         }
       }
-      if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.2) {
-        if (vue.lucky != "谢谢惠顾!") {
+      if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.1) {
+        if (vue.lucky != "谢谢参与") {
           vue.msg = `恭喜你中奖了！我们的工作人员稍后将会与您取得联系！`;
         } else {
           vue.msg = `很抱歉，您未中奖！`;
         }
       }
-      if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.2) {
+      if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.1) {
         ctx.clearRect(0, 0, myCanvasObject.width, myCanvasObject.height);
         vue.nolucky=true;
       }
@@ -219,7 +219,7 @@ export default {
                 this.description='';
         }
       } else {
-        this.lucky = "谢谢惠顾!";
+        this.lucky = "谢谢参与";
       }
     }
   },
