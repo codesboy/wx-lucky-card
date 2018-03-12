@@ -1,15 +1,19 @@
 <template>
     <div id="app">
         <div class="main">
-            <h1 v-if="!beginLucky">抽奖尚未开始或者已经结束</h1>
-        <div v-else>
-            <!-- {{name}}--{{phone}} -->
-            <div class="card">
-                <canvas id="canvas" width="280px" height="100px"></canvas>
-                <div class="lucky">{{lucky}}</div>
+            <h2 v-if="!beginLucky">您已经参与过本次刮刮奖活动了！详情请咨询：028-65006500</h2>
+            <div v-else>
+                <!-- {{name}}--{{phone}} -->
+                <div class="card" v-bind:class="nolucky?'no-lucky':''">
+                    <canvas id="canvas" width="300px" height="180px"></canvas>
+                    <div class="lucky">
+                        {{lucky}}
+                        
+                        <div v-html="description" class="howuse"></div>
+                    </div>
+                </div>
+                <div class="msg" v-bind:class="nolucky?'no-lucky':''" v-html="msg"></div>
             </div>
-            <div class="msg" v-html="msg"></div>
-        </div>
         </div>
         
     </div>
@@ -24,8 +28,8 @@ var preHandler = function(e) {
 import cardImg from "../assets/card.jpg";
 class Draw {
   init(id, vue) {
-    var width = 280;
-    var height = 100;
+    var width = 300;
+    var height = 180;
     var myCanvasObject = document.getElementById(id);
     var ctx = myCanvasObject.getContext("2d");
 
@@ -40,7 +44,7 @@ class Draw {
     ctx.strokeStyle = "#000";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.strokeText("刮一刮，有惊喜", 140, 50);
+    ctx.strokeText("刮一刮，有惊喜", 150, 90);
 
     // var img = new Image();
     // img.onload = function() {
@@ -115,13 +119,14 @@ class Draw {
       }
       if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.2) {
         if (vue.lucky != "谢谢惠顾!") {
-          vue.msg = `恭喜你中奖了！请及时与我们的工作人员取得联系，电话:<a href='tel:02865006500'>02865006500</a>`;
+          vue.msg = `恭喜你中奖了！我们的工作人员稍后将会与您取得联系！`;
         } else {
           vue.msg = `很抱歉，您未中奖！`;
         }
       }
-      if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.5) {
+      if (scrapeNum > myCanvasObject.width * myCanvasObject.height * 0.2) {
         ctx.clearRect(0, 0, myCanvasObject.width, myCanvasObject.height);
+        vue.nolucky=true;
       }
     });
 
@@ -150,21 +155,69 @@ class Draw {
   }
 }
 
+let desc=[];
 export default {
   data() {
     return {
       beginLucky: true,
       phone: "",
       msg: "",
-      lucky: null
+      lucky: null,
+      description:'',
+      nolucky:false
     };
   },
   mounted() {
     if (this.beginLucky) {
       draw = new Draw();
       draw.init("canvas", this);
-      if (window.localStorage.getItem("lucky")) {
-        this.lucky = window.localStorage.getItem("lucky");
+      let lucky_item = window.localStorage.getItem("lucky");
+      if (lucky_item) {
+          this.lucky = lucky_item;
+        switch (lucky_item) {
+            case '8.8元德国ICX种植体':
+                this.description=`
+                    <span>使用须知</span>
+                    <ul><li>凭您的手机号可享德国ICX种植体特价8.8元1颗,含种植体、基台;</li>
+                    <li>种植2颗及2颗以上才能使用;</li>
+                    <li>每个人只能参与一次刮奖，不得累计使用;不与其他优惠同享;</li>
+                    <li>不找零、不兑换现金、不得转让。</li>
+                    <li>有效截止日期：2018年03月31日</li></ul>
+                `;
+                break;
+            case '8.8元二氧化锆全瓷牙1颗':
+                this.description=`
+                    <span>使用须知</span>
+                    <ul><li>凭您的手机号可享二氧化锆全瓷牙特价8.8元1颗;</li>
+                    <li>仅限做种植牙可用;</li>
+                    <li>每个人只能参与一次刮奖，不得累计使用;不与其他优惠同享;</li>
+                    <li>不找零、不兑换现金、不得转让。</li>
+                    <li>有效截止日期：2018年03月31日</li></ul>
+                `;
+                break;
+            case '8.8元特价种植体':
+                this.description=`
+                    <span>使用须知</span>
+                    <ul><li>凭您的手机号可享韩国登腾种植体特价8.8元1颗，含进口种植体、基台;</li>
+                    <li>每个人只能参与一次刮奖，不得累计使用;</li>
+                    <li>不得与门店其他优惠同时使用;</li>
+                    <li>不找零、不兑换现金、不得转让。</li>
+                    <li>有效截止日期：2018年03月31日</li></ul>
+                `;
+                break;
+            case '8.8元韩国登腾':
+                this.description=`
+                    <span>使用须知</span>
+                    <ul><li>凭您的手机号可享韩国登腾种植体特价8.8元1颗，含种植体、基台;</li>
+                    <li>种植2颗及2颗以上才能使用;</li>
+                    <li>每个人只能参与一次刮奖，不得累计使用;不与其他优惠同享;</li>
+                    <li>不找零、不兑换现金、不得转让。</li>
+                    <li>有效截止日期：2018年03月31日</li></ul>
+                `;
+                break;
+            default:
+                this.description='';
+        }
       } else {
         this.lucky = "谢谢惠顾!";
       }
@@ -221,11 +274,16 @@ export default {
 }
 .card {
   position: relative;
-  width: 280px;
-  height: 100px;
-  margin: 20px auto;
+  width: 300px;
+  height: 180px;
+  margin: 10px auto;
+  /* padding: 8px 0; */
   box-sizing: border-box;
   /* background: #ccc; */
+}
+.no-lucky{
+    height: auto;
+    color: #fff!important;
 }
 h2 {
   text-align: center;
@@ -234,20 +292,36 @@ h2 {
   width: 100%;
   height: 100%;
   text-align: center;
-  line-height: 100px;
   z-index: 0;
   font-size: 22px;
   border: 1px solid #ccc;
   color: #fff;
 }
-
+.howuse >>> ul{
+    font-size: 12px;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    width: 80%;
+    margin: 0 auto;
+    color: #e8e414;
+}
+.howuse >>> ul li{
+    /* margin: 3px 0; */
+}
+.howuse >>> span{
+    display: block;
+    font-size: 15px;
+    text-align: left;
+    margin-left: 5px;
+}
 #canvas {
   /* background: red; */
   position: absolute;
   z-index: 1;
 }
 .msg {
-  color: #fff;
+  color: red;
   text-align: center;
 }
 </style>

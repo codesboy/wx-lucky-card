@@ -1,14 +1,15 @@
 <template>
 	<div id="app" class="main">
-        <div class="content">
+        <h2 v-if="!beginLucky" class="nobegin">抽奖尚未开始或者已经结束</h2>
+        <div class="content" v-else>
             <h2>报名刮奖</h2>
-        <div class="item">
-            <label>手机号</label>
-            <p><input placeholder="请输入手机号" v-model="phone"/></p>
-        </div>
-        <div class="btn" @click="isLogin">立即参与</div> 
-        <div class="notice">为了保证您顺利进行刮奖，请务必正确填写您的资料,该资料将作为您的兑奖凭证!</div>
-        <div>{{errmsg}}</div>
+            <div class="item">
+                <label>手机号</label>
+                <p><input placeholder="请输入手机号" v-model="phone"/></p>
+            </div>
+            <div class="btn" @click="isLogin">立即参与</div> 
+            <div class="notice">为了保证您顺利进行刮奖，请务必正确填写您的资料,该资料将作为您的兑奖凭证!</div>
+            <div>{{errmsg}}</div>
         </div>
         
     </div>
@@ -18,14 +19,21 @@ import axios from "axios";
 export default {
   data() {
     return {
+      beginLucky: false,
       name: "",
       phone: "",
-      errmsg: "",
-      issignup: 1
+      errmsg: ""
     };
   },
   created() {
     window.localStorage.clear();
+    axios.get('https://bcwx.rehack.cn/api/v1/getisstart')
+    .then(response=>{
+        if(response){
+            console.log(response.data)
+            this.beginLucky=response.data;
+        }
+    })
   },
   methods: {
     isLogin: function() {
@@ -96,6 +104,10 @@ body,div{
 .main .content h2{
     text-align: center;
     color: #fff;
+}
+.nobegin{
+    padding-top: 30vh;
+    text-align: center;
 }
 .item {
   margin: 10px 0;
