@@ -1,16 +1,30 @@
 <template>
 	<div id="app" class="main">
-        <h2 v-if="!beginLucky" class="nobegin">抽奖尚未开始或者已经结束</h2>
-        <div class="content" v-else>
-            <h2>报名刮奖</h2>
-            <div class="item">
-                <label>手机号</label>
-                <p><input placeholder="请输入手机号" v-model="phone"/></p>
+        <div v-if="!islucky">
+            <h2 v-if="!beginLucky" class="nobegin">刮奖将在每天下午17:30到18:00开启（除周六）</h2>
+            <div class="content" v-else>
+                <h2>贝臣口腔特价做牙幸运刮奖</h2>
+                <div class="item">
+                    <label>手机号</label>
+                    <p><input placeholder="请输入手机号" v-model="phone"/></p>
+                </div>
+                <div class="btn" @click="isLogin">立即参与</div> 
+                <div class="notice">为了保证您顺利进行刮奖，请务必正确填写您的手机号,该手机号将作为您的兑奖凭证!</div>
+                <div>{{errmsg}}</div>
             </div>
-            <div class="btn" @click="isLogin">立即参与</div> 
-            <div class="notice">为了保证您顺利进行刮奖，请务必正确填写您的资料,该资料将作为您的兑奖凭证!</div>
-            <div>{{errmsg}}</div>
         </div>
+        <div v-else class="result">
+            <p class="result-tit">尊敬的{{phone}}客户，您本次参与刮奖的结果如下：</p>
+            <div class="card">
+                <div class="lucky">
+                    {{lucky}}
+                    
+                    <div v-html="description" class="howuse"></div>
+                </div>
+            </div>
+            <p class="sn">本券最终解释权归贝臣口腔所有</p>
+        </div>
+        
         
     </div>
 	</template>
@@ -20,13 +34,22 @@ export default {
   data() {
     return {
       beginLucky: false,
-      name: "",
       phone: "",
-      errmsg: ""
+      errmsg: "",
+      islucky:false,//是否已经参与过抽奖
+      lucky:'',
+      description:''
     };
   },
   created() {
-    window.localStorage.clear();
+    // window.localStorage.clear();
+    if(window.localStorage.getItem("lucky_status")==2){
+        this.islucky=true;
+        this.lucky=window.localStorage.getItem('lucky');
+        this.phone=window.localStorage.getItem('phone');
+        this.description=window.localStorage.getItem('description');
+
+    }
     axios.get('https://bcwx.rehack.cn/api/v1/getisstart')
     .then(response=>{
         if(response){
@@ -39,7 +62,8 @@ export default {
     isLogin: function() {
         if (window.localStorage.getItem("lucky_status") == "2") {
     //   this.$router.push({ path: "main" });
-        alert('您已经参与过本次刮刮奖活动了！详情请咨询：028-65006500')
+        // alert('您已经参与过本次刮刮奖活动了！详情请咨询：028-65006500');
+        this.beginLucky=false
         return false;
     }
       axios
@@ -49,7 +73,7 @@ export default {
         .then(response => {
           if (response.data.phone == this.phone) {
               if(response.data.lucky_status==2){
-                window.localStorage.setItem("lucky_status", 2)
+                // window.localStorage.setItem("lucky_status", 2)
                 alert('您已经参与过本次刮刮奖活动了！详情请咨询：028-65006500');
                 return false;
             }
@@ -75,11 +99,7 @@ export default {
 };
 </script>
 <style scoped>
-@import url("../assets/base.css");
-body,div{
-    margin: 0;
-    padding: 0;
-}
+p{margin: 0;padding: 0;}
 .main {
   width: 100%;
   min-width: 320px;
@@ -108,6 +128,7 @@ body,div{
 .nobegin{
     padding-top: 30vh;
     text-align: center;
+    margin: 0;
 }
 .item {
   margin: 10px 0;
@@ -136,5 +157,52 @@ input {
 .notice {
   font-size: 14px;
   color: red;
+}
+.result{
+    color: red;
+}
+.result-tit{padding-top: 150px;text-align: center;}
+
+
+.card {
+  position: relative;
+  width: 300px;
+  margin: 10px auto;
+  box-sizing: border-box;
+  color: red;
+  border:1px solid red;
+  border-radius: 4px;
+}
+h2 {
+  text-align: center;
+}
+.card .lucky {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  z-index: 0;
+  font-size: 22px;
+}
+.howuse >>> ul{
+    font-size: 14px;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    width: 80%;
+    margin: 0 auto;
+}
+.howuse >>> span{
+    display: block;
+    font-size: 16px;
+    text-align: left;
+    margin-left: 5px;
+}
+.howuse >>> img{
+    width: 50%;
+}
+.sn{
+    font-size: 12px;
+    text-align: center;
+    
 }
 </style>

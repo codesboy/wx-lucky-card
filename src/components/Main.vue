@@ -178,46 +178,56 @@ export default {
             case '8.8元德国ICX种植体':
                 this.description=`
                     <span>使用须知</span>
-                    <ul><li>凭您的手机号可享德国ICX种植体特价8.8元1颗,含种植体、基台;</li>
-                    <li>种植2颗及2颗以上才能使用;</li>
-                    <li>每个人只能参与一次刮奖，不得累计使用;不与其他优惠同享;</li>
-                    <li>不找零、不兑换现金、不得转让。</li>
-                    <li>有效截止日期：2018年03月31日</li></ul>
+                    <ul><li>本券需两颗及以上种植体才能使用；</li>
+                    <li>限本手机号使用，不设零不找补，转让无效;</li>
+                    <li>8.8元ICX种植体包含种植体和基台，不含牙冠;</li>
+                    <li>此券每人仅限使用一张;</li>
+                    <li>本券使用有效期至2018年3月31日,过期无效。</li></ul>
                 `;
                 break;
-            case '8.8元二氧化锆全瓷牙1颗':
+            case '8.8元二氧化锆全瓷冠':
                 this.description=`
                     <span>使用须知</span>
-                    <ul><li>凭您的手机号可享二氧化锆全瓷牙特价8.8元1颗;</li>
-                    <li>仅限做种植牙可用;</li>
-                    <li>每个人只能参与一次刮奖，不得累计使用;不与其他优惠同享;</li>
-                    <li>不找零、不兑换现金、不得转让。</li>
-                    <li>有效截止日期：2018年03月31日</li></ul>
+                    <ul><li>本券8.8元全瓷牙仅限种植使用;</li>
+                    <li>限本手机号使用，不设零不找补，转让无效;</li>
+                    <li>此券每人仅限使用一张;</li>
+                    <li>本券使用有效期至2018年3月31日,过期无效。</li></ul>
                 `;
                 break;
-            case '8.8元特价种植体':
+            case '8.8元韩国登腾种植体':
                 this.description=`
                     <span>使用须知</span>
-                    <ul><li>凭您的手机号可享韩国登腾种植体特价8.8元1颗，含进口种植体、基台;</li>
-                    <li>每个人只能参与一次刮奖，不得累计使用;</li>
-                    <li>不得与门店其他优惠同时使用;</li>
-                    <li>不找零、不兑换现金、不得转让。</li>
-                    <li>有效截止日期：2018年03月31日</li></ul>
+                    <ul><li>本券需两颗及以上种植体才能使用;</li>
+                    <li>限本手机号使用，不设零不找补，转让无效;</li>
+                    <li>8.8元登腾种植体包含种植体和基台，不含牙冠;</li>
+                    <li>此券每人仅限使用一张;</li>
+                    <li>本券使用有效期至2018年3月31日,过期无效;</li></ul>
                 `;
                 break;
-            case '8.8元韩国登腾':
+            case '100元抵用券':
                 this.description=`
                     <span>使用须知</span>
-                    <ul><li>凭您的手机号可享韩国登腾种植体特价8.8元1颗，含种植体、基台;</li>
-                    <li>种植2颗及2颗以上才能使用;</li>
-                    <li>每个人只能参与一次刮奖，不得累计使用;不与其他优惠同享;</li>
-                    <li>不找零、不兑换现金、不得转让。</li>
-                    <li>有效截止日期：2018年03月31日</li></ul>
+                    <ul><li>本券不设零不找补，可在贝臣口腔医院直接抵用;</li>
+                    <li>本券仅限于治疗项目使用。（洁牙和护理产品不能抵用）;</li>
+                    <li>本券使用有效期至2018年3月31日,过期无效。</li></ul>
                 `;
                 break;
+            case '50元抵用券':
+                this.description=`
+                    <span>使用须知</span>
+                    <ul><li>本券不设零不找补，可在贝臣口腔医院直接抵用;</li>
+                    <li>本券仅限于治疗项目使用。（洁牙和护理产品不能抵用）;</li>
+                    <li>本券使用有效期至2018年3月31日,过期无效。</li></ul>
+                `;
+                break;
+            case '贝臣口腔专用牙线':
+                this.description=`<img src="http://wap.cdbcck.com/gj/static/img/yx.png">`;
+                break;
+                
             default:
                 this.description='';
         }
+        window.localStorage.setItem('description',this.description);
       } else {
         this.lucky = "谢谢参与";
       }
@@ -315,6 +325,9 @@ h2 {
     text-align: left;
     margin-left: 5px;
 }
+.howuse >>> img{
+    width: 50%;
+}
 #canvas {
   /* background: red; */
   position: absolute;
@@ -324,4 +337,5 @@ h2 {
   color: red;
   text-align: center;
 }
+
 </style>
