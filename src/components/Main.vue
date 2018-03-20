@@ -3,7 +3,6 @@
         <div class="main">
             <h2 v-if="!beginLucky">您已经参与过本次刮刮奖活动了！详情请咨询：028-65006500</h2>
             <div v-else>
-                <!-- {{name}}--{{phone}} -->
                 <div class="card" v-bind:class="nolucky?'no-lucky':''">
                     <canvas id="canvas" width="300px" height="180px"></canvas>
                     <div class="lucky">
@@ -316,9 +315,7 @@ h2 {
     margin: 0 auto;
     color: #e8e414;
 }
-.howuse >>> ul li{
-    /* margin: 3px 0; */
-}
+
 .howuse >>> span{
     display: block;
     font-size: 15px;
