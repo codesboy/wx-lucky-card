@@ -50,7 +50,7 @@ export default {
         }
         axios.get("https://bcwx.rehack.cn/api/v1/getisstart").then(response => {
             if (response) {
-                console.log(response.data);
+                // console.log(response.data);
                 this.beginLucky = response.data;
             }
         });
