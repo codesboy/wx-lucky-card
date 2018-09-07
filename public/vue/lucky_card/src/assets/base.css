@@ -1,0 +1,7 @@
+*{margin: 0;padding: 0;}
+
+/* 阻止页面上下滑动 */
+html,body{
+    overflow: hidden;
+    height: 100%;
+}
