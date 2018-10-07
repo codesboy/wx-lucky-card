@@ -1,9 +1,9 @@
 <?php
-namespace app\api\controller\v1;
+namespace app\lucky_card\controller\v1;
 
 
-use app\api\validate\SendBarrage;
-use app\api\validate\Upload as UploadValidate;
+use app\lucky_card\validate\SendBarrage;
+use app\lucky_card\validate\Upload as UploadValidate;
 use think\Exception;
 use think\Image;
 use think\facade\Env;
@@ -11,10 +11,10 @@ use app\lib\exception\UserException;
 use app\lib\exception\UploadException;
 use app\lib\exception\SuccessMessage;
 
-use app\api\model\User as UserModel;
-use app\api\model\Barrage as BarrageModel;
+use app\lucky_card\model\User as UserModel;
+use app\lucky_card\model\Barrage as BarrageModel;
 
-use app\api\service\Token as TokenService;
+use app\lucky_card\service\Token as TokenService; 
 
 // 用户发送弹幕接口
 class Barrage{
@@ -48,7 +48,7 @@ class Barrage{
         // 添加关联数据 用户-弹幕消息
         $user->barrages()->save($data);
 
-        return json_encode(new SuccessMessage());
+        return json_encode(new SuccessMessage()); 
     }
 
 
@@ -57,8 +57,8 @@ class Barrage{
         $count=BarrageModel::count();
         return [
             'last_barrage'=>$last_barrage,
-            'count'=>
-        ]
+            'count'=>''
+        ];
     }
 
 }

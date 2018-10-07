@@ -1,5 +1,5 @@
 <?php
-namespace app\api\model;
+namespace app\lucky_card\model;
 //
 class User extends Base{
     public static function getByOpenID($openid){

@@ -1,6 +1,6 @@
 <?php
-namespace app\api\validate;
-use app\api\validate\BaseValidate;
+namespace app\lucky_card\validate;
+use app\lucky_card\validate\BaseValidate;
 class Upload extends BaseValidate{
     protected $rule=[
         'file'=>'require|image|fileSize:10485760'

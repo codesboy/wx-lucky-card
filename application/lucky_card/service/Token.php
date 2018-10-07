@@ -1,5 +1,5 @@
 <?php
-namespace app\api\service;
+namespace app\lucky_card\service;
 use think\facade\Request;
 use think\facade\Cache;
 use app\lib\exception\TokenException;

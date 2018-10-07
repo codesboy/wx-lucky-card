@@ -1,5 +1,5 @@
 <?php
-namespace app\api\model;
+namespace app\lucky_card\model;
 //
 class Barrage extends Base{
 
